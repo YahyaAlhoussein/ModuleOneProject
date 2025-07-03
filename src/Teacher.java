@@ -19,10 +19,6 @@ public class Teacher extends Person{
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-    }
-
     public String getSubject() {
         return subject;
     }

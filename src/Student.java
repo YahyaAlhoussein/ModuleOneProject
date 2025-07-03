@@ -24,6 +24,9 @@ public class Student extends Person{
     }
 
     public void setGrade(int grade) {
+        if (grade < 0){
+            throw new IllegalArgumentException("Student's grade can not be negative");
+        }
         this.grade = grade;
     }
 

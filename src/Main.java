@@ -3,7 +3,7 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 
 public class Main {
-
+    //ArrayList to hold the data
     private static ArrayList<Student> students = new ArrayList<>();
     private static ArrayList<Teacher> teachers = new ArrayList<>();
     private static ArrayList<Course> courses = new ArrayList<>();
@@ -17,13 +17,15 @@ public class Main {
             printMenu();
             try {
                 int choice;
-                String choiceCheker = scanner.next();
-                if (choiceCheker == null || choiceCheker.trim().isEmpty() || !isNumeric(choiceCheker)) {
+                //Check if the user input is not empty/is a number
+                String choiceChecker = scanner.next();
+                if (choiceChecker == null || choiceChecker.trim().isEmpty() || !isNumeric(choiceChecker)) {
                     choice = -1;
                 } else {
-                    choice = Integer.parseInt(choiceCheker);
+                    choice = Integer.parseInt(choiceChecker);
+                    //user to clear \n at the end of the an integer input
+                    scanner.nextLine();
                 }
-                scanner.nextLine();
 
                 switch (choice) {
                     case 1: addStudent();
@@ -104,9 +106,13 @@ public class Main {
         int grade = Integer.parseInt(inputCheck);
         scanner.nextLine();
 
-        Student newStudent = new Student(name, age, email, grade);
-        students.add(newStudent);
-        System.out.println("Student added successfully! New Student ID: " + newStudent.getStudentId());
+        try {
+            Student newStudent = new Student(name, age, email, grade);
+            students.add(newStudent);
+            System.out.println("Student added successfully! New Student ID: " + newStudent.getStudentId());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to add student: " + e.getMessage());
+        }
     }
 
     private static void addTeacher() {
@@ -136,22 +142,27 @@ public class Main {
             System.out.println("Subject can not be empty.");
             return;
         }
+        try{
+            Teacher newTeacher = new Teacher(name, age, email, subject);
+            teachers.add(newTeacher);
+            System.out.println("Teacher added successfully! New Teacher ID: " + newTeacher.getTeacherId());
+        } catch (IllegalArgumentException e){
+            System.out.println("Failed to add teacher: " + e.getMessage());
+        }
 
-        Teacher newTeacher = new Teacher(name, age, email, subject);
-        teachers.add(newTeacher);
-        System.out.println("Teacher added successfully! New Teacher ID: " + newTeacher.getTeacherId());
     }
 
     private static void addCourse() {
         System.out.print("Enter course name: ");
         String name = scanner.nextLine();
-        if (isEmpty(name)){
-            System.out.println("Course name can not be empty.");
-            return;
+
+        try {
+            Course newCourse = new Course(name);
+            courses.add(newCourse);
+            System.out.println("Course added successfully! New Course ID: " + newCourse.getCourseId());
+        } catch (IllegalArgumentException e) {
+            System.out.println("Failed to add course: " + e.getMessage());
         }
-        Course newCourse = new Course(name);
-        courses.add(newCourse);
-        System.out.println("Course added successfully! New Course ID: " + newCourse.getCourseId());
     }
 
     private static void assignCourseToStudent() {
@@ -319,16 +330,24 @@ public class Main {
                     System.out.println("Name can not be empty.");
                     return;
                 }
-                student.setName(inputCheck);
+                try {
+                    student.setName(inputCheck);
+                } catch (IllegalArgumentException e){
+                    System.out.println("Failed to set age: " + e.getMessage());
+                }
                 break;
             case 2:
                 System.out.print("Enter new age: ");
-                inputCheck = scanner.nextLine();
-                if (isNumeric(inputCheck)){
+                inputCheck = scanner.next();
+                if (!isNumeric(inputCheck)){
                     System.out.println("Age must be a number.");
                     return;
                 }
-                student.setAge(Integer.parseInt(inputCheck));
+                try {
+                    student.setAge(Integer.parseInt(inputCheck));
+                } catch (IllegalArgumentException e){
+                    System.out.println("Failed to set age: " + e.getMessage());
+                }
                 scanner.nextLine();
                 break;
             case 3:
@@ -338,16 +357,24 @@ public class Main {
                     System.out.println("Email can not be empty.");
                     return;
                 }
-                student.setEmail(inputCheck);
+                try{
+                    student.setEmail(inputCheck);
+                }catch (IllegalArgumentException e){
+                    System.out.println("Failed to set email: " + e.getMessage());
+                }
                 break;
             case 4:
                 System.out.print("Enter new grade: ");
-                inputCheck = scanner.nextLine();
-                if (isNumeric(inputCheck)){
+                inputCheck = scanner.next();
+                if (!isNumeric(inputCheck)){
                     System.out.println("Grade must be a number.");
                     return;
                 }
-                student.setGrade(Integer.parseInt(inputCheck));
+                try {
+                    student.setGrade(Integer.parseInt(inputCheck));
+                }catch (IllegalArgumentException e){
+                    System.out.println("Failed to set grade: " + e.getMessage());
+                }
                 scanner.nextLine();
                 break;
             default:
@@ -376,6 +403,7 @@ public class Main {
         }
     }
 
+    //These are helper methods.
     private static Student findStudentById(int id) {
         for (Student s : students) {
             if (s.getStudentId() == id) {
